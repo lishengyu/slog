@@ -1,8 +1,10 @@
 package slog
 
 import (
+	"io"
 	"log"
 	"log/syslog"
+	"os"
 )
 
 const (
@@ -24,7 +26,9 @@ func InitSyslog(appName string) error {
 	if err != nil {
 		return err
 	}
-	log.SetOutput(syslogger)
+
+	multiWriter := io.MultiWriter(os.Stdout, syslogger)
+	log.SetOutput(multiWriter)
 	return nil
 }
 
